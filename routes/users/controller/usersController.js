@@ -1,7 +1,7 @@
-const { createUser, hashPassword, comparePassword } = require("./userHelper");
 
 const User = require('../model/User');
-
+const jwt = require('jsonwebtoken');
+const { createUser, hashPassword, comparePassword } = require("./userHelper");
 
 
 module.exports = {
@@ -31,16 +31,18 @@ module.exports = {
                 }
             }
 
-            if (req.body.password !== 'abc') {
-                throw {
-                    status: 403,
-                    message: 'Invalid Password',
-                }
+            let payload = {
+                id: foundUser._id,
+                username: foundUser.username
             }
+
+            let token = await jwt.sign(payload, process.env.JWT_KEY,{expiresIn: 5*60})
+
             res.status(200).json({
                 username: req.body.username,
                 password: req.body.password,
-                message: "Successful Login!!"
+                message: "Successful Login!!",
+                token: token
             })
         } catch (error) {
             res.status(error.status).json(error.message);
