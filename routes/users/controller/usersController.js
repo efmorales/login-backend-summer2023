@@ -79,6 +79,10 @@ module.exports = {
         catch (e) {
             res.status(e.status).json('error');
         }
+    },
+
+    authtoken: async (req, res) => {
+        res.send('Authtoken')
     }
 
     // add controller function object
