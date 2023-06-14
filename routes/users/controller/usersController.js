@@ -36,7 +36,7 @@ module.exports = {
                 username: foundUser.username
             }
 
-            let token = await jwt.sign(payload, process.env.JWT_KEY,{expiresIn: 5*60})
+            let token = await jwt.sign(payload, process.env.JWT_KEY,{expiresIn: 60*60});
 
             res.status(200).json({
                 username: req.body.username,
@@ -82,8 +82,33 @@ module.exports = {
     },
 
     authtoken: async (req, res) => {
-        res.send('Authtoken')
-    }
+
+        // console.log(req.decoded);
+
+        let foundUser = await User.findById(req.decoded.id);
+
+        // let token = await jwt.sign(payload, process.env.JWT_KEY,{expiresIn: 60*60});
+
+        res.status(200).json({
+            username: foundUser.username,
+            message: 'succesful login',
+        });
+        
+    },
+
+    deleteuser: async (req, res) => {
+        const result = await User.deleteOne({ _id: req.decoded.id });
+      
+        if (result.deletedCount === 1) {
+          res.status(200).json({
+            message: 'User successfully deleted'
+          });
+        } else {
+          res.status(404).json({
+            message: 'User not found'
+          });
+        }
+      }
 
     // add controller function object
 }

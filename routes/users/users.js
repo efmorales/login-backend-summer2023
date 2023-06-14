@@ -17,9 +17,7 @@ router.get('/login-test', function (req, res) {
 router.post('/login', usersController.login);
 router.post('/register', usersController.register);
 router.post('/authtoken', verifyToken, usersController.authtoken);
-
-//add route for register
-
+router.delete('/deleteuser', verifyToken, usersController.deleteuser);
 
 
 module.exports = router;
